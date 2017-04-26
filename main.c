@@ -25,5 +25,6 @@ int main(int argc, char* argv[]){
 
 	calculPertinence(index, emptyLines, n);
 	freeIndex(&index, n);
+	free(emptyLines);
 	return 0;
 }

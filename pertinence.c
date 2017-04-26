@@ -41,7 +41,7 @@ void calculPertinence(Element** index, int* emptyLines, int n){
 	int nbIterations = 0;
 
 
-	//makeGoogleMatrix(index, n);
+	makeGoogleMatrix(index, n);
 	double * oPI = malloc((n+1) * sizeof(double));
 	double * nPI = malloc((n+1) * sizeof(double));
 
@@ -55,25 +55,31 @@ void calculPertinence(Element** index, int* emptyLines, int n){
 		for(int i = 1 ; i <= n ; i++){
 			Element* current = index[i];
 			nPI[i] = 0;
-			while(current != NULL){
-				nPI[i] += oPI[current->rowNumber] * current->value;
-				current = current->son;
+			for(int j = 1 ; j <= n ; j++){
+				if(current != NULL && current->rowNumber == j){
+					nPI[i] += oPI[j] * current->value;
+					current = current->son;
+				} else if(emptyLines[j] == 1){
+					nPI[i] += oPI[j] * ALPHA * 1/n;
+				}
+				nPI[i] += oPI[j] * (1.0 - ALPHA) * 1/n;
 			}
 		}
+
 		norme = getNorme1Sub(nPI, oPI, n);
-		if(norme > epsilon){
-			Element ** tmp = oPI;
-			oPI = nPI;
-			nPI = tmp;
-		}
+
+		Element ** tmp = oPI;
+		oPI = nPI;
+		nPI = tmp;
+
 		nbIterations++;
-		if((getNorme1(oPI, n)-1) > epsilon){
+		if(fabs(getNorme1(oPI, n)-1) > epsilon){
 			printf("La somme du vecteur est différente de 1\n");
 			break;
 		}
 	}while(norme > epsilon);
 	printf("Résultat en %d itérations\n", nbIterations);
-	printVecteur(nPI, n);
+	printVecteur(oPI, n);
 
 	free(nPI);
 	free(oPI);

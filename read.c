@@ -6,7 +6,7 @@
  */
 #include "read.h"
 
-int readFile(char * filename, Element*** index, int* n, int* m, int** emptyLines){
+int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLines){
 
 	FILE * f = fopen(filename, "r");
 	if(f == NULL){
@@ -21,11 +21,9 @@ int readFile(char * filename, Element*** index, int* n, int* m, int** emptyLines
 	printf("n = %d ; m = %d \n", *n, *m);
 
 	//La case index[0] n'est jamais utilisée, les indices vont de 1 à n
-	(*index) = calloc((*n)+1, sizeof(Element*));
-	index = (*index);
+	Element** index = (*pIndex) = calloc((*n)+1, sizeof(Element*));
 
-	(*emptyLines) = calloc((*n)+1, sizeof(int*));
-	emptyLines = (*emptyLines);
+	int* emptyLines = (*pEmptyLines) = calloc((*n)+1, sizeof(int*));
 
 	for(int i = 0 ; i < (*n) ; i++){//Dans explication du prof : j = rowNumber et i = columnNumber
 		int rowNumber, degree;
@@ -44,13 +42,24 @@ int readFile(char * filename, Element*** index, int* n, int* m, int** emptyLines
 			if(fscanf(f, "%d %lf", &(e->columnNumber), &(e->value)) != 2){
 				return -1;
 			}
+
 			e->rowNumber = rowNumber ;
-			e->son = index[e->columnNumber];
-			index[e->columnNumber] = e;
+
+			//Insertion dans la liste triée
+			Element* k = index[e->columnNumber] ;
+			if(k == NULL || k->rowNumber > rowNumber){ //Insertion en première position de la liste
+				e->son = k;
+				index[e->columnNumber] = e;
+			} else {
+				for( ; k->son != NULL && k->son->rowNumber < rowNumber ; k = k->son);
+
+				e->son = k->son;
+				k->son = e;
+			}
 
 			//Pour assurer la cohérence, on calcule la dernière proba
 			if(numCouple == (degree-1)){
-				e->value = lastProb;//
+				e->value = lastProb;
 			} else {
 				lastProb -= e->value;
 			}

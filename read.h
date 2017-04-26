@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include "structures.h"
 
-int readFile(char * filename, Element*** index, int* n, int* m, int** emptyLines);
+int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLines);
 
 
 #endif /* READ_H_ */
