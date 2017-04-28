@@ -21,7 +21,7 @@ int main(int argc, char* argv[]){
 		return -1;
 	}
 
-	printliste(index, n);
+	//printliste(index, n);
 
 	calculPertinence(index, emptyLines, n);
 	freeIndex(&index, n);

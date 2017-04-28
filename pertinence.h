@@ -7,6 +7,7 @@
 
 #ifndef PERTINENCE_H_
 #define PERTINENCE_H_
+#include <stdlib.h>
 #include <math.h>
 #include "structures.h"
 #include "utils.h"

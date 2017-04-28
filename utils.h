@@ -8,6 +8,7 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 #include <stdio.h>
+#include <stdlib.h>
 #include "structures.h"
 void freeIndex(Element *** index, int n);
 void printliste(Element** index, int n);

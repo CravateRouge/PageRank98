@@ -8,6 +8,7 @@
 #ifndef READ_H_
 #define READ_H_
 #include <stdio.h>
+#include <stdlib.h>
 #include "structures.h"
 
 int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLines);
