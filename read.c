@@ -37,16 +37,17 @@ int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLin
 		}
 
 		for(int numCouple = 0 ; numCouple < degree ; numCouple++){
+			int columnNumber;
 			Element * e = calloc(1, sizeof(Element));
 
-			if(fscanf(f, "%d %lf", &(e->columnNumber), &(e->value)) != 2){
+			if(fscanf(f, "%d %lf", &(columnNumber), &(e->value)) != 2){
 				return -1;
 			}
 
 			e->rowNumber = rowNumber ;
 
-			e->son = index[e->columnNumber];
-			index[e->columnNumber] = e;
+			e->son = index[columnNumber];
+			index[columnNumber] = e;
 
 			//Pour assurer la cohérence, on calcule la dernière proba
 			if(numCouple == (degree-1)){

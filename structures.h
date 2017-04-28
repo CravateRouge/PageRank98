@@ -11,7 +11,6 @@
 typedef struct Element{
 	double value;
 	int rowNumber;
-	int columnNumber;
 	struct Element * son;
 } Element;
 

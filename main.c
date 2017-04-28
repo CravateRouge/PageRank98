@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
 
 	if(readFile(argv[1], &index, &n, &m, &emptyLines) == -1){
 		fprintf(stderr, "Fichier non conforme\n");
-		return -1;
+		return 1;
 	}
 
 	//printliste(index, n);
