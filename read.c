@@ -45,17 +45,8 @@ int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLin
 
 			e->rowNumber = rowNumber ;
 
-			//Insertion dans la liste triée
-			Element* k = index[e->columnNumber] ;
-			if(k == NULL || k->rowNumber > rowNumber){ //Insertion en première position de la liste
-				e->son = k;
-				index[e->columnNumber] = e;
-			} else {
-				for( ; k->son != NULL && k->son->rowNumber < rowNumber ; k = k->son);
-
-				e->son = k->son;
-				k->son = e;
-			}
+			e->son = index[e->columnNumber];
+			index[e->columnNumber] = e;
 
 			//Pour assurer la cohérence, on calcule la dernière proba
 			if(numCouple == (degree-1)){

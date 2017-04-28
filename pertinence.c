@@ -38,6 +38,8 @@ void calculPertinence(Element** index, int* emptyLines, int n){
 	//La case index[0] n'est jamais utilisée !
 	double epsilon = pow(10.0, -6.0);
 	double normeSub;
+	double alphaDivN = ALPHA/n;
+	double precalcSurfer = (1-ALPHA)/n;
 	int nbIterations = 0;
 
 
@@ -52,19 +54,28 @@ void calculPertinence(Element** index, int* emptyLines, int n){
 
 	// Itération
 	do{
+		//Multiplication
 		for(int i = 1 ; i <= n ; i++){
 			Element* current = index[i];
 			nPI[i] = 0;
-			for(int j = 1 ; j <= n ; j++){
-				if(current != NULL && current->rowNumber == j){
-					nPI[i] += oPI[j] * current->value;
-					current = current->son;
-				} else if(emptyLines[j] == 1){
-					nPI[i] += oPI[j] * ALPHA * 1/n;
-				}
-				nPI[i] += oPI[j] * (1.0 - ALPHA) * 1/n;
+			while(current != NULL){
+				nPI[i] += oPI[current->rowNumber] * current->value;
+				current = current->son;
 			}
 		}
+
+		// Saut lors d'une impasse
+		double impasse = 0.0;
+		for(int i = 1 ; i <= n ; i++){
+			if(emptyLines[i] == 1){
+				impasse += oPI[i];
+			}
+		}
+		impasse *= alphaDivN;
+		for(int i = 1 ; i <= n ; i++){
+			nPI[i] += impasse + precalcSurfer;//Impasses + RandomSurfer
+		}
+
 
 		normeSub = getNorme1Sub(nPI, oPI, n);
 
