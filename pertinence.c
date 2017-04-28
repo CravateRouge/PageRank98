@@ -42,8 +42,10 @@ void calculPertinence(Element** index, int* emptyLines, int n){
 	double precalcSurfer = (1-ALPHA)/n;
 	int nbIterations = 0;
 
+	//Plus utile si on crée la matrice
+	//google à la lecture
+	//makeGoogleMatrix(index, n);
 
-	makeGoogleMatrix(index, n);
 	double * oPI = malloc((n+1) * sizeof(double));
 	double * nPI = malloc((n+1) * sizeof(double));
 

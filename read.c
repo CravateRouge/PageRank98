@@ -37,10 +37,10 @@ int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLin
 		}
 
 		for(int numCouple = 0 ; numCouple < degree ; numCouple++){
-			int columnNumber;
+			int columnNumber, value;
 			Element * e = calloc(1, sizeof(Element));
 
-			if(fscanf(f, "%d %lf", &(columnNumber), &(e->value)) != 2){
+			if(fscanf(f, "%d %lf", &(columnNumber), &(value)) != 2){
 				return -1;
 			}
 
@@ -51,10 +51,11 @@ int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLin
 
 			//Pour assurer la cohérence, on calcule la dernière proba
 			if(numCouple == (degree-1)){
-				e->value = lastProb;
+				value = lastProb;
 			} else {
-				lastProb -= e->value;
+				lastProb -= value;
 			}
+			e->value=value * ALPHA;
 		}
 
 

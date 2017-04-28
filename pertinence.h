@@ -12,8 +12,6 @@
 #include "structures.h"
 #include "utils.h"
 
-#define ALPHA 0.85
-
 void calculPertinence(Element** index, int* emptyLines, int n);
 
 #endif /* PERTINENCE_H_ */
