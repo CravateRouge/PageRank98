@@ -38,8 +38,8 @@ void calculPertinence(Element** index, int* emptyLines, int n){
 	//La case index[0] n'est jamais utilisée !
 
 	double normeSub;
-	double alphaDivN = ALPHA/n;
-	double precalcSurfer = (1-ALPHA)/n;
+	double alphaDivN = ALPHA/(double)n;
+	double precalcSurfer = (1-ALPHA)/(double)n;
 	int nbIterations = 0;
 
 	//Plus utile si on crée la matrice
@@ -49,55 +49,68 @@ void calculPertinence(Element** index, int* emptyLines, int n){
 	double * oPI = malloc((n+1) * sizeof(double));
 	double * nPI = malloc((n+1) * sizeof(double));
 
+	// Saut lors d'une impasse
+	double impasse = 0;
+	for(int i = 1 ; i <= n ; i++){
+		impasse += emptyLines[i];
+	}
+
 	//Initialisation
 	for(int i = 1 ; i <= n ; i++){
-		oPI[i] = (1.0)/n;
+		Element* current = index[i];
+		nPI[i] = 0;
+
+		while(current != NULL){
+			nPI[i] += current->value;
+			current = current->son;
+		}
+
+		nPI[i] = nPI[i]/n + impasse*alphaDivN/n + precalcSurfer;
 	}
+	//Est-ce vraiment la peine de faire la norme à la première itération?
 
 	// Itération
 	do{
+
+		double* tmp = oPI;
+		oPI = nPI;
+		nPI = tmp;
+
+		// Saut lors d'une impasse
+		impasse = 0;
+		for(int i = 1 ; i <= n ; i++){
+			impasse += oPI[i]*emptyLines[i];
+		}
+
 		//Multiplication
 		for(int i = 1 ; i <= n ; i++){
 			Element* current = index[i];
 			nPI[i] = 0;
+
 			while(current != NULL){
-				nPI[i] += oPI[current->rowNumber] * current->value;
+				nPI[i] += current->value * oPI[current->rowNumber];
 				current = current->son;
 			}
-		}
 
-		// Saut lors d'une impasse
-		double impasse = 0.0;
-		for(int i = 1 ; i <= n ; i++){
-			if(emptyLines[i] == 1){
-				impasse += oPI[i];
-			}
-		}
-		impasse *= alphaDivN;
-		for(int i = 1 ; i <= n ; i++){
-			nPI[i] += impasse + precalcSurfer;//Impasses + RandomSurfer
+			nPI[i] = nPI[i] + impasse*alphaDivN + precalcSurfer;
 		}
 
 
 		normeSub = getNorme1Sub(nPI, oPI, n);
 
-		Element ** tmp = oPI;
-		oPI = nPI;
-		nPI = tmp;
-
 		nbIterations++;
 
 		//Inutile sachant que le norme est forcée à 1,
 		//n'oublions pas que nous sommes optimistes
-//		if(fabs(getNorme1(oPI, n)-1) > epsilon){
-//			printf("La somme du vecteur est différente de 1\n");
-//			break;
-//		}
+		//		if(fabs(getNorme1(oPI, n)-1) > epsilon){
+		//			printf("La somme du vecteur est différente de 1\n");
+		//			break;
+		//		}
 
 	}while(normeSub > 0.000001);
 
 	printf("Résultat en %d itérations\n", nbIterations);
-	//printVecteur(oPI, n);
+	printVecteur(nPI, n);
 
 	free(nPI);
 	free(oPI);
