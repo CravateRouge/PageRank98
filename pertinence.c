@@ -24,16 +24,6 @@ double getNorme1Sub(double * nPI, double * oPI, int n){
 	return norme;
 }
 
-void makeGoogleMatrix(Element** index, int n){
-	for(int i = 1 ; i <= n ; i++){
-		Element* current = index[i];
-		while(current != NULL){
-			current->value = current->value*ALPHA;
-			current = current->son;
-		}
-	}
-}
-
 void calculPertinence(Element** index, int* emptyLines, int n){
 	//La case index[0] n'est jamais utilisée !
 
@@ -41,10 +31,6 @@ void calculPertinence(Element** index, int* emptyLines, int n){
 	double alphaDivN = ALPHA/(double)n;
 	double precalcSurfer = (1-ALPHA)/(double)n;
 	int nbIterations = 0;
-
-	//Plus utile si on crée la matrice
-	//google à la lecture
-	//makeGoogleMatrix(index, n);
 
 	double * oPI = malloc((n+1) * sizeof(double));
 	double * nPI = malloc((n+1) * sizeof(double));
@@ -102,10 +88,10 @@ void calculPertinence(Element** index, int* emptyLines, int n){
 
 		//Inutile sachant que le norme est forcée à 1,
 		//n'oublions pas que nous sommes optimistes
-		//		if(fabs(getNorme1(oPI, n)-1) > epsilon){
-		//			printf("La somme du vecteur est différente de 1\n");
-		//			break;
-		//		}
+//		if(fabs(getNorme1(oPI, n)-1) > epsilon){
+//			printf("La somme du vecteur est différente de 1\n");
+//			break;
+//		}
 
 	}while(normeSub > 0.000001);
 

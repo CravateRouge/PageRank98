@@ -52,4 +52,7 @@ Mkfile.old
 dkms.conf
 
 /graph
+result.txt
 
+/Release/
+/Debug/
