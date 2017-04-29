@@ -7,6 +7,7 @@
 #include "read.h"
 
 double min(double x, double y){
+	if(x == 0) return y;
 	return x > y ? y : x;
 }
 
