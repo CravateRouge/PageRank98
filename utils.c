@@ -37,15 +37,14 @@ void printliste(Element** index, int n){
 void printVecteur(double * tab, int n){
 	FILE * f = fopen("./result.txt", "w");
 	if(f == NULL){
-		fprintf(stderr, "file");
+		fprintf(stderr, "Unable to open result.txt");
+		return;
 	}
 	double somme = 0.0;
 	for(int i = 1 ; i <= n ; i++){
-		//printf("%d = %lf\n", i, tab[i]);
 		fprintf(f, "%d = %lf\n", i, tab[i]);
 		somme += tab[i];
 	}
-	//printf("Somme = %lf\n", somme);
 	fprintf(f, "Somme = %lf\n", somme);
 
 	fclose(f);
