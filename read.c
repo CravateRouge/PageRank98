@@ -34,9 +34,9 @@ int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLin
 
 	int* emptyLines = (*pEmptyLines) = calloc((*n)+1, sizeof(int*));
 
-	double* xvector = (*pXvector) = calloc((*n)+1, sizeof(double*));
+	double* xvector = (*pXvector) = calloc((*n), sizeof(double*));
 
-	double* yvector = (*pYvector) = calloc((*n)+1, sizeof(double*));
+	double* yvector = (*pYvector) = calloc((*n), sizeof(double*));
 
 	double* nabla= (*pNabla) = calloc((*n)+1, sizeof(double*));
 
