@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "read.h"
 #include "structures.h"
 #include "utils.h"
@@ -18,6 +19,8 @@ int main(int argc, char* argv[]){
 
 	if(readFile(argv[1], &index, &n, &m, &emptyLines) == -1){
 		fprintf(stderr, "Fichier non conforme\n");
+		freeIndex(&index, n);
+		free(emptyLines);
 		return 1;
 	}
 

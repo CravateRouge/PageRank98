@@ -13,6 +13,7 @@ typedef struct Element{
 	int rowNumber;
 	struct Element * son;
 } Element;
+
 #define ALPHA 0.85
 
 #endif /* STRUCTURES_H_ */

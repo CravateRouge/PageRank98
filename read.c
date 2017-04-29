@@ -28,7 +28,8 @@ int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLin
 	for(int i = 0 ; i < (*n) ; i++){//Dans explication du prof : j = rowNumber et i = columnNumber
 		int rowNumber, degree;
 		double lastProb = 1.0;
-		if(fscanf(f, "%d %d", &rowNumber, &degree) != 2){
+		int scanfReturn1 = fscanf(f, "%d %d", &rowNumber, &degree);
+		if(scanfReturn1 != 2 && scanfReturn1 != EOF){
 			return -1;
 		}
 
@@ -37,17 +38,22 @@ int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLin
 		}
 
 		for(int numCouple = 0 ; numCouple < degree ; numCouple++){
-			int columnNumber, value;
+			int columnNumber;
+			double value;
 			Element * e = calloc(1, sizeof(Element));
 
-			if(fscanf(f, "%d %lf", &(columnNumber), &(value)) != 2){
+			int scanfReturn2 = fscanf(f, "%d %lf", &columnNumber, &value);
+			if(scanfReturn2 != 2 && scanfReturn2 != EOF){
 				return -1;
 			}
 
+			//printf("Read : %d %lf \n", columnNumber, value);
 			e->rowNumber = rowNumber ;
 
+			//Insertion dans la liste
 			e->son = index[columnNumber];
 			index[columnNumber] = e;
+
 
 			//Pour assurer la cohérence, on calcule la dernière proba
 			if(numCouple == (degree-1)){
