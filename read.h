@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include "structures.h"
 
-int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLines);
+int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLines, double** pXvector, double** pYvector, double** pNabla);
 
 
 #endif /* READ_H_ */

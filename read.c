@@ -6,7 +6,15 @@
  */
 #include "read.h"
 
-int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLines){
+double min(double x, double y){
+	return x > y ? y : x;
+}
+
+double max(double x, double y){
+	return x < y ? y : x;
+}
+
+int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLines, double** pXvector, double** pYvector, double** pNabla){
 
 	FILE * f = fopen(filename, "r");
 	if(f == NULL){
@@ -24,6 +32,12 @@ int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLin
 	Element** index = (*pIndex) = calloc((*n)+1, sizeof(Element*));
 
 	int* emptyLines = (*pEmptyLines) = calloc((*n)+1, sizeof(int*));
+
+	double* xvector = (*pXvector) = calloc((*n)+1, sizeof(double*));
+
+	double* yvector = (*pYvector) = calloc((*n)+1, sizeof(double*));
+
+	double* nabla= (*pNabla) = calloc((*n)+1, sizeof(double*));
 
 	for(int i = 0 ; i < (*n) ; i++){//Dans explication du prof : j = rowNumber et i = columnNumber
 		int rowNumber, degree;
@@ -45,6 +59,10 @@ int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLin
 			if(fscanf(f, "%d %lf", &columnNumber, &value) != 2){
 				return -1;
 			}
+
+			nabla[rowNumber] = min(nabla[rowNumber], value);
+			xvector[i] = min(xvector[i], value);
+			yvector[i] = max(yvector[i], value);
 
 			e->rowNumber = rowNumber ;
 
