@@ -49,7 +49,7 @@ int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLin
 			emptyLines[rowNumber] = 1;
 
 			//TODO Optimisation, ne pas refaire lorsqu'une ligne vide a déjà été vue
-			for(int i = 0 ; i < n ; i++){
+			for(int i = 0 ; i < (*n) ; i++){
 				nabla[i] = min(nabla[i], ALPHA/(*n));
 				delta[i] = max(delta[i], ALPHA/(*n));
 			}
