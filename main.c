@@ -14,11 +14,12 @@ int main(int argc, char* argv[]){
 
 	int n, m;
 	//index est de taille n+1, index[0] n'est pas utilisé
-	Element** index = 0;
-	int* emptyLines = 0;
-	double* xvector, *yvector, *nabla = NULL;
+	Element** index = NULL;
+	int* emptyLines = NULL;
+	double* nabla = NULL;
+	double* delta = NULL;
 
-	if(readFile(argv[1], &index, &n, &m, &emptyLines, &xvector, &yvector, &nabla) == -1){
+	if(readFile(argv[1], &index, &n, &m, &emptyLines, &nabla, &delta) == -1){
 		fprintf(stderr, "Fichier non conforme\n");
 		freeIndex(&index, n);
 		free(emptyLines);
@@ -28,10 +29,10 @@ int main(int argc, char* argv[]){
 	printliste(index, n);
 
 	calculPertinence(index, emptyLines, n);
+
 	freeIndex(&index, n);
-	free(xvector);
-	free(yvector);
 	free(nabla);
+	free(delta);
 	free(emptyLines);
 	return 0;
 }
