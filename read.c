@@ -7,7 +7,6 @@
 #include "read.h"
 
 double min(double x, double y){
-	if(x == 0) return y;
 	return x > y ? y : x;
 }
 
@@ -15,29 +14,42 @@ double max(double x, double y){
 	return x < y ? y : x;
 }
 
-int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLines, double** pNabla, double** pDelta){
+int readFile(char * filename, Element*** pIndex, int* pN, int* pM, int** pEmptyLines, double** pNabla, double** pDelta){
 
+	/* Ouverture du fichier */
 	FILE * f = fopen(filename, "r");
 	if(f == NULL){
 		fprintf(stderr, "Le fichier n'existe pas");
 		return -1;
 	}
 
-	if(fscanf(f, "%d", n) == 0 || fscanf(f, "%d", m) == 0){
+	/* Lecture du nombre de sommets et du nombre d'arcs */
+	if(fscanf(f, "%d", pN) == 0 || fscanf(f, "%d", pM) == 0){
 		return -1;
 	}
 
-	printf("n = %d ; m = %d \n", *n, *m);
+	int n = (*pN);
+	printf("n = %d ; m = %d \n", n, (*pM));
 
 	//La case index[0] n'est jamais utilisée, les indices vont de 1 à n
-	Element** index = (*pIndex) = calloc((*n)+1, sizeof(Element*));
+	Element** index = (*pIndex) = calloc(n+1, sizeof(Element*));
 
-	int* emptyLines = (*pEmptyLines) = calloc((*n)+1, sizeof(int*));
+	int* emptyLines = (*pEmptyLines) = calloc(n+1, sizeof(int*));
 
-	double* nabla = (*pNabla) = calloc((*n)+1, sizeof(double*));
-	double* delta = (*pDelta) = calloc((*n)+1, sizeof(double*));
+	int * columnLength = calloc(n+1, sizeof(double));
 
-	for(int i = 0 ; i < (*n) ; i++){
+	double* nabla = (*pNabla) = malloc(n+1, sizeof(double*));
+	double* delta = (*pDelta) = malloc(n+1, sizeof(double*));
+
+	/* Initialisation Nabla et delta (cout en N au lieu de M tests dans le min)*/
+	double precalcSurfer = (1-ALPHA)/n;
+	for(int k = 1 ; k <= n ; k++){
+		nabla[k] = 1;
+		delta[k] = precalcSurfer;
+	}
+
+	/* Lecture des arcs */
+	for(int i = 0 ; i < n ; i++){
 		int rowNumber, degree;
 		double lastProb = 1.0;
 
@@ -49,9 +61,9 @@ int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLin
 			emptyLines[rowNumber] = 1;
 
 			//TODO Optimisation, ne pas refaire lorsqu'une ligne vide a déjà été vue
-			for(int i = 0 ; i < (*n) ; i++){
-				nabla[i] = min(nabla[i], ALPHA/(*n));
-				delta[i] = max(delta[i], ALPHA/(*n));
+			for(int k = 0 ; k < n ; k++){
+				nabla[k] = min(nabla[k], ALPHA/n);
+				delta[k] = max(delta[k], ALPHA/n);
 			}
 
 		}
@@ -70,6 +82,8 @@ int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLin
 			//Insertion dans la liste
 			e->son = index[columnNumber];
 			index[columnNumber] = e;
+
+			columnLength[columnNumber]++;
 
 
 			//Pour assurer la cohérence, on calcule la dernière proba
@@ -95,6 +109,15 @@ int readFile(char * filename, Element*** pIndex, int* n, int* m, int** pEmptyLin
 		}
 	}
 	fclose(f);
+
+	/* Gestion des potentiels 0 dans les colonnes, qui ne seraient pas compris dans des lignes vides */
+	for(int k = 1 ; k <= n ; k++){
+		if(columnLength[k] != n){
+			nabla[k] = min(nabla[k], precalcSurfer);
+			delta[k] = max(delta[k], precalcSurfer);
+		}
+	}
+
 	return 0;
 }
 
