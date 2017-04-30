@@ -12,14 +12,14 @@ int main(int argc, char* argv[]){
 		return 1;
 	}
 
-	int n, m;
+	int n;
 	//index est de taille n+1, index[0] n'est pas utilisé
 	Element** index = NULL;
 	int* emptyLines = NULL;
 	double* nabla = NULL;
 	double* delta = NULL;
 
-	if(readFile(argv[1], &index, &n, &m, &emptyLines, &nabla, &delta) == -1){
+	if(readFile(argv[1], &index, &n, &emptyLines, &nabla, &delta) == -1){
 		fprintf(stderr, "Fichier non conforme\n");
 		freeIndex(&index, n);
 		free(emptyLines);

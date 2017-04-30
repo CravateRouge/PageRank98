@@ -14,7 +14,7 @@ double max(double x, double y){
 	return x < y ? y : x;
 }
 
-int readFile(char * filename, Element*** pIndex, int* pN, int* pM, int** pEmptyLines, double** pNabla, double** pDelta){
+int readFile(char * filename, Element*** pIndex, int* pN, int** pEmptyLines, double** pNabla, double** pDelta){
 
 	/* Ouverture du fichier */
 	FILE * f = fopen(filename, "r");
@@ -24,12 +24,13 @@ int readFile(char * filename, Element*** pIndex, int* pN, int* pM, int** pEmptyL
 	}
 
 	/* Lecture du nombre de sommets et du nombre d'arcs */
-	if(fscanf(f, "%d", pN) == 0 || fscanf(f, "%d", pM) == 0){
+	int m;
+	if(fscanf(f, "%d", pN) == 0 || fscanf(f, "%d", &m) == 0){
 		return -1;
 	}
 
 	int n = (*pN);
-	printf("n = %d ; m = %d \n", n, (*pM));
+	printf("n = %d ; m = %d \n", n, m);
 
 	//La case index[0] n'est jamais utilisée, les indices vont de 1 à n
 	Element** index = (*pIndex) = calloc(n+1, sizeof(Element*));
