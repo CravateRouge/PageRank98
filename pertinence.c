@@ -62,7 +62,7 @@ void calculPertinence(Element** index, int* emptyLines, int n){
 		oPI = nPI;
 		nPI = tmp;
 
-		// Saut lors d'une impasse
+		// Saut lors d'une impasse devient un scalaire
 		impasse = 0;
 		for(int i = 1 ; i <= n ; i++){
 			impasse += oPI[i]*emptyLines[i];

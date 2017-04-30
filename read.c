@@ -99,8 +99,8 @@ int readFile(char * filename, Element*** pIndex, int* pN, int** pEmptyLines, dou
 			e->value = value * ALPHA;
 
 			// nabla[0] c'est le minimum de la colonne 0 de G
-			nabla[columnNumber] = min(nabla[columnNumber], e->value);
-			delta[columnNumber] = max(delta[columnNumber], e->value);
+			nabla[columnNumber] = min(nabla[columnNumber], e->value + precalcSurfer);
+			delta[columnNumber] = max(delta[columnNumber], e->value + precalcSurfer);
 
 		}
 
@@ -119,6 +119,7 @@ int readFile(char * filename, Element*** pIndex, int* pN, int** pEmptyLines, dou
 		}
 	}
 
+	free(columnLength);
 	return 0;
 }
 
