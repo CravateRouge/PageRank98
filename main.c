@@ -13,7 +13,7 @@ int main(int argc, char* argv[]){
 	}
 
 	int n;
-	//index est de taille n+1, index[0] n'est pas utilisé
+
 	Element** index = NULL;
 	int* emptyLines = NULL;
 	double* nabla = NULL;

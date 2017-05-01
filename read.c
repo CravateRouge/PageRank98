@@ -32,19 +32,19 @@ int readFile(char * filename, Element*** pIndex, int* pN, int** pEmptyLines, dou
 	int n = (*pN);
 	printf("n = %d ; m = %d \n", n, m);
 
-	//La case index[0] n'est jamais utilisée, les indices vont de 1 à n
-	Element** index = (*pIndex) = calloc(n+1, sizeof(Element*));
 
-	int* emptyLines = (*pEmptyLines) = calloc(n+1, sizeof(int*));
+	Element** index = (*pIndex) = calloc(n, sizeof(Element*));
 
-	int * columnLength = calloc(n+1, sizeof(double));
+	int* emptyLines = (*pEmptyLines) = calloc(n, sizeof(*emptyLines));
 
-	double* nabla = (*pNabla) = malloc(n+1, sizeof(double*));
-	double* delta = (*pDelta) = malloc(n+1, sizeof(double*));
+	int * columnLength = calloc(n, sizeof(*columnLength));
+
+	double* nabla = (*pNabla) = malloc(n*sizeof(*nabla));
+	double* delta = (*pDelta) = malloc(n*sizeof(*delta));
 
 	/* Initialisation Nabla et delta (cout en N au lieu de M tests dans le min)*/
 	double precalcSurfer = (1-ALPHA)/n;
-	for(int k = 1 ; k <= n ; k++){
+	for(int k = 0 ; k < n ; k++){
 		nabla[k] = 1;
 		delta[k] = precalcSurfer;
 	}
@@ -57,6 +57,7 @@ int readFile(char * filename, Element*** pIndex, int* pN, int** pEmptyLines, dou
 		if(fscanf(f, "%d %d", &rowNumber, &degree) != 2){
 			return -1;
 		}
+		rowNumber--;
 
 		if(degree == 0){
 			emptyLines[rowNumber] = 1;
@@ -77,6 +78,7 @@ int readFile(char * filename, Element*** pIndex, int* pN, int** pEmptyLines, dou
 			if(fscanf(f, "%d %lf", &columnNumber, &value) != 2){
 				return -1;
 			}
+			columnNumber --;
 
 			e->rowNumber = rowNumber ;
 
@@ -96,11 +98,13 @@ int readFile(char * filename, Element*** pIndex, int* pN, int** pEmptyLines, dou
 			} else {
 				lastProb -= value;
 			}
-			e->value = value * ALPHA;
+
+			value = value * ALPHA;
+			e->value = value;
 
 			// nabla[0] c'est le minimum de la colonne 0 de G
-			nabla[columnNumber] = min(nabla[columnNumber], e->value + precalcSurfer);
-			delta[columnNumber] = max(delta[columnNumber], e->value + precalcSurfer);
+			nabla[columnNumber] = min(nabla[columnNumber], value + precalcSurfer);
+			delta[columnNumber] = max(delta[columnNumber], value + precalcSurfer);
 
 		}
 
@@ -112,7 +116,7 @@ int readFile(char * filename, Element*** pIndex, int* pN, int** pEmptyLines, dou
 	fclose(f);
 
 	/* Gestion des potentiels 0 dans les colonnes, qui ne seraient pas compris dans des lignes vides */
-	for(int k = 1 ; k <= n ; k++){
+	for(int k = 0 ; k < n ; k++){
 		if(columnLength[k] != n){
 			nabla[k] = min(nabla[k], precalcSurfer);
 			delta[k] = max(delta[k], precalcSurfer);

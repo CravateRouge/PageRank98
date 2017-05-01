@@ -9,7 +9,7 @@
 double getNorme1(double * nPI, int n){
 	double norme = 0;
 
-	for(int i = 1 ; i <= n ; i++){
+	for(int i = 0 ; i <n ; i++){
 		norme += nPI[i];
 	}
 	return norme;
@@ -18,31 +18,30 @@ double getNorme1(double * nPI, int n){
 double getNorme1Sub(double * nPI, double * oPI, int n){
 	double norme = 0;
 
-	for(int i = 1 ; i <= n ; i++){
+	for(int i = 0 ; i < n ; i++){
 		norme += fabs(nPI[i] - oPI[i]);
 	}
 	return norme;
 }
 
 void calculPertinence(Element** index, int* emptyLines, int n){
-	//La case index[0] n'est jamais utilisée !
 
 	double normeSub;
 	double alphaDivN = ALPHA/(double)n;
 	double precalcSurfer = (1-ALPHA)/(double)n;
 	int nbIterations = 0;
 
-	double * oPI = malloc((n+1) * sizeof(double));
-	double * nPI = malloc((n+1) * sizeof(double));
+	double * oPI = malloc((n) * sizeof(double));
+	double * nPI = malloc((n) * sizeof(double));
 
 	// Saut lors d'une impasse
 	double impasse = 0;
-	for(int i = 1 ; i <= n ; i++){
+	for(int i = 0 ; i < n ; i++){
 		impasse += emptyLines[i];
 	}
 
 	//Initialisation
-	for(int i = 1 ; i <= n ; i++){
+	for(int i = 0 ; i < n ; i++){
 		Element* current = index[i];
 		nPI[i] = 0;
 
@@ -64,12 +63,12 @@ void calculPertinence(Element** index, int* emptyLines, int n){
 
 		// Saut lors d'une impasse devient un scalaire
 		impasse = 0;
-		for(int i = 1 ; i <= n ; i++){
+		for(int i = 0 ; i < n ; i++){
 			impasse += oPI[i]*emptyLines[i];
 		}
 
 		//Multiplication
-		for(int i = 1 ; i <= n ; i++){
+		for(int i = 0 ; i < n ; i++){
 			Element* current = index[i];
 			nPI[i] = 0;
 
