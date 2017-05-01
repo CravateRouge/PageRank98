@@ -12,6 +12,6 @@
 #include "structures.h"
 #include "utils.h"
 
-void calculPertinence(Element** index, int* emptyLines, int n);
+void calculPertinence(Element** index, uint8_t* emptyLines, int n);
 
 #endif /* PERTINENCE_H_ */

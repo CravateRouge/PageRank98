@@ -24,7 +24,7 @@ double getNorme1Sub(double * nPI, double * oPI, int n){
 	return norme;
 }
 
-void calculPertinence(Element** index, int* emptyLines, int n){
+void calculPertinence(Element** index, uint8_t* emptyLines, int n){
 
 	double normeSub;
 	double alphaDivN = ALPHA/(double)n;
@@ -37,7 +37,8 @@ void calculPertinence(Element** index, int* emptyLines, int n){
 	// Saut lors d'une impasse
 	double impasse = 0;
 	for(int i = 0 ; i < n ; i++){
-		impasse += emptyLines[i];
+		if(get_bit(emptyLines, i))
+			impasse += 1;
 	}
 
 	//Initialisation
@@ -64,7 +65,8 @@ void calculPertinence(Element** index, int* emptyLines, int n){
 		// Saut lors d'une impasse devient un scalaire
 		impasse = 0;
 		for(int i = 0 ; i < n ; i++){
-			impasse += oPI[i]*emptyLines[i];
+			if(get_bit(emptyLines, i))
+				impasse += oPI[i];
 		}
 
 		//Multiplication

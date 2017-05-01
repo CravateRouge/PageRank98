@@ -8,6 +8,8 @@
 #ifndef STRUCTURES_H_
 #define STRUCTURES_H_
 
+#include <stdint.h>
+
 typedef struct Element{
 	double value;
 	int rowNumber;

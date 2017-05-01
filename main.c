@@ -15,7 +15,7 @@ int main(int argc, char* argv[]){
 	int n;
 
 	Element** index = NULL;
-	int* emptyLines = NULL;
+	uint8_t* emptyLines = NULL;
 	double* nabla = NULL;
 	double* delta = NULL;
 

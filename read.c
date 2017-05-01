@@ -14,7 +14,7 @@ double max(double x, double y){
 	return x < y ? y : x;
 }
 
-int readFile(char * filename, Element*** pIndex, int* pN, int** pEmptyLines, double** pNabla, double** pDelta){
+int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines, double** pNabla, double** pDelta){
 
 	/* Ouverture du fichier */
 	FILE * f = fopen(filename, "r");
@@ -35,7 +35,8 @@ int readFile(char * filename, Element*** pIndex, int* pN, int** pEmptyLines, dou
 
 	Element** index = (*pIndex) = calloc(n, sizeof(Element*));
 
-	int* emptyLines = (*pEmptyLines) = calloc(n, sizeof(*emptyLines));
+	/*Pour n informations on alloue (n+7)/8 octets*/
+	uint8_t* emptyLines = (*pEmptyLines) = calloc((n+7)/8, sizeof(*emptyLines));
 
 	int * columnLength = calloc(n, sizeof(*columnLength));
 
@@ -60,7 +61,7 @@ int readFile(char * filename, Element*** pIndex, int* pN, int** pEmptyLines, dou
 		rowNumber--;
 
 		if(degree == 0){
-			emptyLines[rowNumber] = 1;
+			set_bit(emptyLines, rowNumber);
 
 			//TODO Optimisation, ne pas refaire lorsqu'une ligne vide a déjà été vue
 			for(int k = 0 ; k < n ; k++){
