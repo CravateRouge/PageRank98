@@ -64,7 +64,7 @@ void calculPertinence(Element** index, uint8_t* emptyLines, double* nabla, doubl
 			newYi += impasse*alphaDivN + precalcSurfer + nabla[i] * UnMoinsNormeY;;
 
 			max(X+i, newXi);
-			min(Y+i, newXi);
+			min(Y+i, newYi);
 		}
 
 		nbIterations++;
