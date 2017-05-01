@@ -82,3 +82,13 @@ bool get_bit(uint8_t *pElements, int element_index){
 
 	return *element&(1<<bit_index);
 }
+
+void min(double* x, double y){
+	if(*x > y)
+		*x = y;
+}
+
+void max(double* x, double y){
+	if(*x < y)
+		*x = y;
+}

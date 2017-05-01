@@ -6,13 +6,6 @@
  */
 #include "read.h"
 
-double min(double x, double y){
-	return x > y ? y : x;
-}
-
-double max(double x, double y){
-	return x < y ? y : x;
-}
 
 int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines, double** pNabla, double** pDelta){
 
@@ -38,16 +31,19 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 	/*Pour n informations on alloue (n+7)/8 octets*/
 	uint8_t* emptyLines = (*pEmptyLines) = calloc((n+7)/8, sizeof(*emptyLines));
 
-	int * columnLength = calloc(n, sizeof(*columnLength));
+//	int * columnLength = calloc(n, sizeof(*columnLength));
 
 	double* nabla = (*pNabla) = malloc(n*sizeof(*nabla));
-	double* delta = (*pDelta) = malloc(n*sizeof(*delta));
+	double* delta = (*pDelta) = calloc(n, sizeof(*delta));
 
+	bool is_impasse=false;
+
+	double alphaDivN = ALPHA/(double)n;
 	/* Initialisation Nabla et delta (cout en N au lieu de M tests dans le min)*/
 	double precalcSurfer = (1-ALPHA)/n;
 	for(int k = 0 ; k < n ; k++){
-		nabla[k] = 1;
-		delta[k] = precalcSurfer;
+		/*TODO ne pas remplir nabla alors que la valeur est identique dans toutes les colonnes*/
+		nabla[k] = precalcSurfer;
 	}
 
 	/* Lecture des arcs */
@@ -62,13 +58,7 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 
 		if(degree == 0){
 			set_bit(emptyLines, rowNumber);
-
-			//TODO Optimisation, ne pas refaire lorsqu'une ligne vide a déjà été vue
-			for(int k = 0 ; k < n ; k++){
-				nabla[k] = min(nabla[k], ALPHA/n);
-				delta[k] = max(delta[k], ALPHA/n);
-			}
-
+			is_impasse = true;
 		}
 
 		for(int numCouple = 0 ; numCouple < degree ; numCouple++){
@@ -87,7 +77,7 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 			e->son = index[columnNumber];
 			index[columnNumber] = e;
 
-			columnLength[columnNumber]++;
+//			columnLength[columnNumber]++;
 
 
 			//Pour assurer la cohérence, on calcule la dernière proba
@@ -103,9 +93,17 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 			value = value * ALPHA;
 			e->value = value;
 
-			// nabla[0] c'est le minimum de la colonne 0 de G
-			nabla[columnNumber] = min(nabla[columnNumber], value + precalcSurfer);
-			delta[columnNumber] = max(delta[columnNumber], value + precalcSurfer);
+			/*
+			 * TODO demander au prof si une page peut pointer sur elle même
+			 * Inutile dans l'algo original de pagerank car une page ne peut pointer sur elle même
+			 * donc le minimum de chaque colonne est 0 => pour tout j nabla[j]=precalcsurfer
+			 */
+//			if(!is_impasse){
+//				// nabla[0] c'est le minimum de la colonne 0 de G
+//				min(nabla+columnNumber, value + precalcSurfer);
+//			}
+
+			max(delta+columnNumber, value + precalcSurfer);
 
 		}
 
@@ -116,15 +114,20 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 	}
 	fclose(f);
 
-	/* Gestion des potentiels 0 dans les colonnes, qui ne seraient pas compris dans des lignes vides */
-	for(int k = 0 ; k < n ; k++){
-		if(columnLength[k] != n){
-			nabla[k] = min(nabla[k], precalcSurfer);
-			delta[k] = max(delta[k], precalcSurfer);
-		}
+	if(is_impasse){
+		int precalc = alphaDivN + precalcSurfer;
+		for(int k = 0; k < n ; k++)
+			max(delta+k,precalc);
 	}
 
-	free(columnLength);
+//	/* Gestion des potentiels 0 dans les colonnes, qui ne seraient pas compris dans des lignes vides */
+//	for(int k = 0 ; k < n ; k++)
+//		if(columnLength[k] != n)
+//			nabla[k] = precalcSurfer;
+
+
+
+//	free(columnLength);
 	return 0;
 }
 
