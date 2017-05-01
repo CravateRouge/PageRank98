@@ -24,7 +24,61 @@ double getNorme1Sub(double * nPI, double * oPI, int n){
 	return norme;
 }
 
-void calculPertinence(Element** index, uint8_t* emptyLines, int n){
+void calculPertinence(Element** index, uint8_t* emptyLines, double* nabla, double* delta, int n){
+
+	double normeSub;
+	double alphaDivN = ALPHA/n;
+	double impasse;
+	double precalcSurfer = (1-ALPHA)/n;
+	int nbIterations = 0;
+
+	double* X = malloc(n * sizeof(double));
+	double* Y = malloc(n * sizeof(double));
+	memcpy(X, nabla, n);
+	memcpy(Y, delta, n);
+
+	do{
+		// Saut lors d'une impasse, devient un scalaire
+		impasse = 0;
+		for(int i = 0 ; i < n ; i++){
+			if(get_bit(emptyLines, i))
+				impasse += X[i];
+		}
+
+		//calcul de (1 - ||x||) pour le max
+		double UnMoinsNormeX = 1 - getNorme1(X, n);//Best nom de variable ever
+		double UnMoinsNormeY = 1 - getNorme1(Y, n);
+
+		for(int i = 0 ; i < n ; i++){
+			Element* current = index[i];
+			double newXi = 0;
+			double newYi = 0;
+
+			while(current != NULL){
+				newXi += X[current->rowNumber] * current->value;
+				newYi += Y[current->rowNumber] * current->value;
+				current = current->son;
+			}
+
+			newXi += impasse*alphaDivN + precalcSurfer + nabla[i] * UnMoinsNormeX;
+			newYi += impasse*alphaDivN + precalcSurfer + nabla[i] * UnMoinsNormeY;;
+
+			max(X+i, newXi);
+			min(Y+i, newXi);
+		}
+
+		nbIterations++;
+
+	}while(getNorme1Sub(X, Y, n) > 0.000001);
+
+	printf("Résultat en %d itérations\n", nbIterations);
+	printVecteur(X, n);
+	free(X);
+	free(Y);
+}
+
+
+void calculPertinenceOld(Element** index, uint8_t* emptyLines, int n){
 
 	double normeSub;
 	double alphaDivN = ALPHA/(double)n;
@@ -62,7 +116,7 @@ void calculPertinence(Element** index, uint8_t* emptyLines, int n){
 		oPI = nPI;
 		nPI = tmp;
 
-		// Saut lors d'une impasse devient un scalaire
+		// Saut lors d'une impasse, devient un scalaire
 		impasse = 0;
 		for(int i = 0 ; i < n ; i++){
 			if(get_bit(emptyLines, i))

@@ -28,7 +28,7 @@ int main(int argc, char* argv[]){
 
 	printliste(index, n);
 
-	calculPertinence(index, emptyLines, n);
+	calculPertinence(index, emptyLines, nabla, delta, n);
 
 	freeIndex(&index, n);
 	free(nabla);

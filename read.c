@@ -36,14 +36,14 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 	double* nabla = (*pNabla) = malloc(n*sizeof(*nabla));
 	double* delta = (*pDelta) = calloc(n, sizeof(*delta));
 
-	bool is_impasse=false;
+	bool flagImpasse = false;//Flag true si il y a au moins une ligne vide
 
 	double alphaDivN = ALPHA/(double)n;
 	/* Initialisation Nabla et delta (cout en N au lieu de M tests dans le min)*/
 	double precalcSurfer = (1-ALPHA)/n;
 	for(int k = 0 ; k < n ; k++){
 		/*TODO ne pas remplir nabla alors que la valeur est identique dans toutes les colonnes*/
-		nabla[k] = precalcSurfer;
+		nabla[k] = precalcSurfer;//Dans l'hypothèse ou une page ne peut pas pointer sur elle-même
 	}
 
 	/* Lecture des arcs */
@@ -58,7 +58,7 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 
 		if(degree == 0){
 			set_bit(emptyLines, rowNumber);
-			is_impasse = true;
+			flagImpasse = true;
 		}
 
 		for(int numCouple = 0 ; numCouple < degree ; numCouple++){
@@ -69,7 +69,7 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 			if(fscanf(f, "%d %lf", &columnNumber, &value) != 2){
 				return -1;
 			}
-			columnNumber --;
+			columnNumber--;
 
 			e->rowNumber = rowNumber ;
 
@@ -114,7 +114,7 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 	}
 	fclose(f);
 
-	if(is_impasse){
+	if(flagImpasse){
 		int precalc = alphaDivN + precalcSurfer;
 		for(int k = 0; k < n ; k++)
 			max(delta+k,precalc);
