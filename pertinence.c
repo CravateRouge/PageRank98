@@ -34,8 +34,8 @@ void calculPertinence(Element** index, uint8_t* emptyLines, double* nabla, doubl
 
 	double* X = malloc(n * sizeof(double));
 	double* Y = malloc(n * sizeof(double));
-	memcpy(X, nabla, n);
-	memcpy(Y, delta, n);
+	memcpy(X, nabla, n * sizeof(double));
+	memcpy(Y, delta, n * sizeof(double));
 
 	do{
 		// Saut lors d'une impasse, devient un scalaire
