@@ -61,7 +61,7 @@ void calculPertinence(Element** index, uint8_t* emptyLines, double* nabla, doubl
 			}
 
 			newXi += impasse*alphaDivN + precalcSurfer + nabla[i] * UnMoinsNormeX;
-			newYi += impasse*alphaDivN + precalcSurfer + nabla[i] * UnMoinsNormeY;;
+			newYi += impasse*alphaDivN + precalcSurfer + nabla[i] * UnMoinsNormeY;
 
 			max(X+i, newXi);
 			min(Y+i, newYi);
@@ -83,7 +83,7 @@ void calculPertinenceOld(Element** index, uint8_t* emptyLines, int n){
 	double normeSub;
 	double alphaDivN = ALPHA/(double)n;
 	double precalcSurfer = (1-ALPHA)/(double)n;
-	int nbIterations = 0;
+	int nbIterations = 1;
 
 	double * oPI = malloc((n) * sizeof(double));
 	double * nPI = malloc((n) * sizeof(double));
