@@ -9,7 +9,7 @@
 double getNorme1(double * nPI, int n){
 	double norme = 0;
 
-	for(int i = 0 ; i <n ; i++){
+	for(int i = 0 ; i < n ; i++){
 		norme += nPI[i];
 	}
 	return norme;
@@ -28,7 +28,7 @@ void calculPertinence(Element** index, uint8_t* emptyLines, double* nabla, doubl
 
 	double normeSub;
 	double alphaDivN = ALPHA/n;
-	double impasse;
+	double impasseX, impasseY;
 	double precalcSurfer = (1-ALPHA)/n;
 	int nbIterations = 0;
 
@@ -37,17 +37,25 @@ void calculPertinence(Element** index, uint8_t* emptyLines, double* nabla, doubl
 	memcpy(X, nabla, n * sizeof(double));
 	memcpy(Y, delta, n * sizeof(double));
 
+	double normeX, normeY;
+
 	do{
+		normeX = getNorme1(X, n);
+		normeY = getNorme1(Y, n);
+
 		// Saut lors d'une impasse, devient un scalaire
-		impasse = 0;
+		impasseX = 0;
+		impasseY = 0;
 		for(int i = 0 ; i < n ; i++){
-			if(get_bit(emptyLines, i))
-				impasse += X[i];
+			if(get_bit(emptyLines, i)){
+				impasseX += X[i];
+				impasseY += Y[i];
+			}
 		}
 
 		//calcul de (1 - ||x||) pour le max
-		double UnMoinsNormeX = 1 - getNorme1(X, n);//Best nom de variable ever
-		double UnMoinsNormeY = 1 - getNorme1(Y, n);
+		double UnMoinsNormeX = 1 - normeX;//Best nom de variable ever
+		double UnMoinsNormeY = 1 - normeY;
 
 		for(int i = 0 ; i < n ; i++){
 			Element* current = index[i];
@@ -60,8 +68,8 @@ void calculPertinence(Element** index, uint8_t* emptyLines, double* nabla, doubl
 				current = current->son;
 			}
 
-			newXi += impasse*alphaDivN + precalcSurfer + nabla[i] * UnMoinsNormeX;
-			newYi += impasse*alphaDivN + precalcSurfer + nabla[i] * UnMoinsNormeY;
+			newXi += impasseX * alphaDivN + precalcSurfer * normeX + nabla[i] * UnMoinsNormeX;
+			newYi += impasseY * alphaDivN + precalcSurfer * normeY + nabla[i] * UnMoinsNormeY;
 
 			max(X+i, newXi);
 			min(Y+i, newYi);
@@ -69,7 +77,9 @@ void calculPertinence(Element** index, uint8_t* emptyLines, double* nabla, doubl
 
 		nbIterations++;
 
-	}while(getNorme1Sub(X, Y, n) > 0.000001);
+		normeSub = getNorme1Sub(X, Y, n);
+
+	}while(normeSub > 0.000001);
 
 	printf("Résultat en %d itérations\n", nbIterations);
 	printVecteur(X, n);
