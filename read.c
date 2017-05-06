@@ -110,7 +110,7 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 	fclose(f);
 
 	if(flagImpasse){
-		int precalc = alphaDivN + precalcSurfer;
+		double precalc = alphaDivN + precalcSurfer;
 		for(int k = 0; k < n ; k++)
 			max(delta+k,precalc);
 	}

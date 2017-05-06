@@ -75,15 +75,12 @@ void calculPertinence(Element** index, uint8_t* emptyLines, double* nabla, doubl
 			min(Y+i, newYi);
 		}
 
-		nbIterations++;
 
 		normeSub = getNorme1Sub(X, Y, n);
 
-		if(nbIterations%10==0){
-			printf("ite %d, normeX %lf, normeY %lf, normeSub %lf\n",nbIterations,normeX,normeY,normeSub);
-		}
+		nbIterations++;
 
-	}while(normeSub > 0.000000001);
+	}while(normeSub > 1e-9);
 
 	printf("Résultat en %d itérations\n", nbIterations);
 	printVecteur(X, n);
