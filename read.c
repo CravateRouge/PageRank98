@@ -7,7 +7,7 @@
 #include "read.h"
 
 
-int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines, double** pNabla, double** pDelta){
+int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines, double** pDelta){
 
 	/* Ouverture du fichier */
 	FILE * f = fopen(filename, "r");
@@ -33,7 +33,6 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 
 	//	int * columnLength = calloc(n, sizeof(*columnLength));
 
-	double* nabla = (*pNabla) = malloc(n*sizeof(*nabla));
 	double* delta = (*pDelta) = calloc(n, sizeof(*delta));
 
 	bool flagImpasse = false;//Flag true si il y a au moins une ligne vide
@@ -41,10 +40,6 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 	double alphaDivN = ALPHA/(double)n;
 	/* Initialisation Nabla et delta (cout en N au lieu de M tests dans le min)*/
 	double precalcSurfer = (1-ALPHA)/n;
-	for(int k = 0 ; k < n ; k++){
-		/*TODO ne pas remplir nabla alors que la valeur est identique dans toutes les colonnes*/
-		nabla[k] = precalcSurfer;//Dans l'hypothèse ou une page ne peut pas pointer sur elle-même
-	}
 
 	/* Lecture des arcs */
 	for(int i = 0 ; i < n ; i++){

@@ -24,24 +24,47 @@ double getNorme1Sub(double * nPI, double * oPI, int n){
 	return norme;
 }
 
-void calculPertinence(Element** index, uint8_t* emptyLines, double* nabla, double* delta, int n){
+void calculPertinence(Element** index, uint8_t* emptyLines, double* Y, int n){
 
 	double normeSub;
 	double alphaDivN = ALPHA/n;
-	double impasseX, impasseY;
+	double impasseX = 0, impasseY = 0;
 	double precalcSurfer = (1-ALPHA)/n;
-	int nbIterations = 0;
+	int nbIterations = 1;
 
 	double* X = malloc(n * sizeof(double));
-	double* Y = malloc(n * sizeof(double));
-	memcpy(X, nabla, n * sizeof(double));
-	memcpy(Y, delta, n * sizeof(double));
 
-	double normeX, normeY;
+	for(int i = 0 ; i < n ; i++){
+		if(get_bit(emptyLines, i)){
+			impasseX += precalcSurfer;
+			impasseY += Y[i];
+		}
+	}
+
+	for(int i = 0 ; i < n ; i++){
+		Element* current = index[i];
+		double newXi = 0;
+		double newYi = 0;
+
+		while(current != NULL){
+			newXi += precalcSurfer * current->value;
+			newYi += Y[current->rowNumber] * current->value;
+			current = current->son;
+		}
+
+		newXi += impasseX * alphaDivN + precalcSurfer;
+		newYi += impasseY * alphaDivN + precalcSurfer;
+
+		/*
+		 * Le max entre precalcSurfer et newXi est forcément newXi
+		 * car newXi contient precalcSurfer plus un nombre > 0
+		 * dû aux caractéristiques de la matrice
+		 */
+		X[i] = newXi;
+		min(Y+i, newYi);
+	}
 
 	do{
-		normeX = getNorme1(X, n);
-		normeY = getNorme1(Y, n);
 
 		// Saut lors d'une impasse, devient un scalaire
 		impasseX = 0;
@@ -52,10 +75,6 @@ void calculPertinence(Element** index, uint8_t* emptyLines, double* nabla, doubl
 				impasseY += Y[i];
 			}
 		}
-
-		//calcul de (1 - ||x||) pour le max
-		double UnMoinsNormeX = 1 - normeX;//Best nom de variable ever
-		double UnMoinsNormeY = 1 - normeY;
 
 		for(int i = 0 ; i < n ; i++){
 			Element* current = index[i];
@@ -68,8 +87,8 @@ void calculPertinence(Element** index, uint8_t* emptyLines, double* nabla, doubl
 				current = current->son;
 			}
 
-			newXi += impasseX * alphaDivN + precalcSurfer * normeX + nabla[i] * UnMoinsNormeX;
-			newYi += impasseY * alphaDivN + precalcSurfer * normeY + nabla[i] * UnMoinsNormeY;
+			newXi += impasseX * alphaDivN + precalcSurfer;
+			newYi += impasseY * alphaDivN + precalcSurfer;
 
 			max(X+i, newXi);
 			min(Y+i, newYi);
