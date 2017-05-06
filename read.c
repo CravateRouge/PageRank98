@@ -31,7 +31,7 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 	/*Pour n informations on alloue (n+7)/8 octets*/
 	uint8_t* emptyLines = (*pEmptyLines) = calloc((n+7)/8, sizeof(*emptyLines));
 
-//	int * columnLength = calloc(n, sizeof(*columnLength));
+	//	int * columnLength = calloc(n, sizeof(*columnLength));
 
 	double* nabla = (*pNabla) = malloc(n*sizeof(*nabla));
 	double* delta = (*pDelta) = calloc(n, sizeof(*delta));
@@ -77,7 +77,7 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 			e->son = index[columnNumber];
 			index[columnNumber] = e;
 
-//			columnLength[columnNumber]++;
+			//			columnLength[columnNumber]++;
 
 
 			//Pour assurer la cohérence, on calcule la dernière proba
@@ -93,15 +93,10 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 			value = value * ALPHA;
 			e->value = value;
 
-			/*
-			 * TODO demander au prof si une page peut pointer sur elle même
-			 * Inutile dans l'algo original de pagerank car une page ne peut pointer sur elle même
-			 * donc le minimum de chaque colonne est 0 => pour tout j nabla[j]=precalcsurfer
-			 */
-//			if(!is_impasse){
-//				// nabla[0] c'est le minimum de la colonne 0 de G
-//				min(nabla+columnNumber, value + precalcSurfer);
-//			}
+			//			if(!is_impasse){
+			//				// nabla[0] c'est le minimum de la colonne 0 de G
+			//				min(nabla+columnNumber, value + precalcSurfer);
+			//			}
 
 			max(delta+columnNumber, value + precalcSurfer);
 
@@ -120,14 +115,14 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 			max(delta+k,precalc);
 	}
 
-//	/* Gestion des potentiels 0 dans les colonnes, qui ne seraient pas compris dans des lignes vides */
-//	for(int k = 0 ; k < n ; k++)
-//		if(columnLength[k] != n)
-//			nabla[k] = precalcSurfer;
+	//	/* Gestion des potentiels 0 dans les colonnes, qui ne seraient pas compris dans des lignes vides */
+	//	for(int k = 0 ; k < n ; k++)
+	//		if(columnLength[k] != n)
+	//			nabla[k] = precalcSurfer;
 
 
 
-//	free(columnLength);
+	//	free(columnLength);
 	return 0;
 }
 

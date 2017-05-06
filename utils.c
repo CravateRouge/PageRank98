@@ -50,6 +50,22 @@ void printVecteur(double * tab, int n){
 	fclose(f);
 }
 
+void printBoolVecteur(uint8_t * boolVector, int n){
+	FILE * f = fopen("./booleanVector.txt", "w");
+
+	if(f == NULL){
+		fprintf(stderr, "Unable to open booleanVector.txt");
+		return;
+	}
+
+	for(int i = 0 ; i < n ; i++){
+		int boole = (boolVector[i/8]&(1<<i%8))?1:0;
+		fprintf(f, "%d\n", boole);
+	}
+
+	fclose(f);
+}
+
 double getSommeVecteur(double * tab, int n){
 	double somme = 0.0;
 	for(int i = 0 ; i < n ; i++){
@@ -65,7 +81,7 @@ void set_bit(uint8_t *pElements,int element_index) {
 	/*Bit d'info concerné*/
 	int bit_index = element_index%8;
 
-	uint8_t* element = pElements+(byte_index/8);
+	uint8_t* element = pElements+byte_index;
 
 	/*Modifie le nème bit à 1*/
 	*element= (*element)|(1<<bit_index);
@@ -78,7 +94,7 @@ bool get_bit(uint8_t *pElements, int element_index){
 	/*Bit d'info concerné*/
 	int bit_index = element_index%8;
 
-	uint8_t* element = pElements+(byte_index/8);
+	uint8_t* element = pElements+byte_index;
 
 	return *element&(1<<bit_index);
 }

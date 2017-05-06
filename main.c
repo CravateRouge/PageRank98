@@ -29,6 +29,7 @@ int main(int argc, char* argv[]){
 	//printliste(index, n);
 
 	printf("Début de l'algorithme\n");
+//	calculPertinenceOld(index, emptyLines, n);
 	calculPertinence(index, emptyLines, nabla, delta, n);
 
 	freeIndex(&index, n);

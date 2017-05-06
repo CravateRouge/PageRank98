@@ -79,7 +79,11 @@ void calculPertinence(Element** index, uint8_t* emptyLines, double* nabla, doubl
 
 		normeSub = getNorme1Sub(X, Y, n);
 
-	}while(normeSub > 0.000001);
+		if(nbIterations%10==0){
+			printf("ite %d, normeX %lf, normeY %lf, normeSub %lf\n",nbIterations,normeX,normeY,normeSub);
+		}
+
+	}while(normeSub > 0.000000001);
 
 	printf("Résultat en %d itérations\n", nbIterations);
 	printVecteur(X, n);
@@ -90,6 +94,7 @@ void calculPertinence(Element** index, uint8_t* emptyLines, double* nabla, doubl
 
 void calculPertinenceOld(Element** index, uint8_t* emptyLines, int n){
 
+	printBoolVecteur(emptyLines, n);
 	double normeSub;
 	double alphaDivN = ALPHA/(double)n;
 	double precalcSurfer = (1-ALPHA)/(double)n;
@@ -158,7 +163,7 @@ void calculPertinenceOld(Element** index, uint8_t* emptyLines, int n){
 //			break;
 //		}
 
-	}while(normeSub > 0.000001);
+	}while(normeSub > 1e-9);
 
 	printf("Résultat en %d itérations\n", nbIterations);
 	printVecteur(nPI, n);
