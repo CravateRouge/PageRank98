@@ -64,7 +64,7 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 		for(int numCouple = 0 ; numCouple < degree ; numCouple++){
 			int columnNumber;
 			double value;
-			Element * e = calloc(1, sizeof(Element));
+			Element * e = malloc(sizeof(Element));
 
 			if(fscanf(f, "%d %lf", &columnNumber, &value) != 2){
 				return -1;
