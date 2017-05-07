@@ -6,8 +6,8 @@
  */
 #include "pertinence.h"
 
-double getNorme1(double * nPI, int n){
-	double norme = 0;
+long double getNorme1(long double * nPI, int n){
+	long double norme = 0;
 
 	for(int i = 0 ; i < n ; i++){
 		norme += nPI[i];
@@ -15,8 +15,8 @@ double getNorme1(double * nPI, int n){
 	return norme;
 }
 
-double getNorme1Sub(double * nPI, double * oPI, int n){
-	double norme = 0;
+long double getNorme1Sub(long double * nPI, long double * oPI, int n){
+	long double norme = 0;
 
 	for(int i = 0 ; i < n ; i++){
 		norme += fabs(nPI[i] - oPI[i]);
@@ -24,15 +24,15 @@ double getNorme1Sub(double * nPI, double * oPI, int n){
 	return norme;
 }
 
-void calculPertinence(Element** index, uint8_t* emptyLines, double* Y, int n){
+void calculPertinence(Element** index, uint8_t* emptyLines, long double* Y, int n){
 
-	double normeSub;
-	double alphaDivN = ALPHA/n;
-	double impasseX = 0, impasseY = 0;
-	double precalcSurfer = (1-ALPHA)/n;
+	long double normeSub;
+	long double alphaDivN = ALPHA/n;
+	long double impasseX = 0, impasseY = 0;
+	long double precalcSurfer = (1-ALPHA)/n;
 	int nbIterations = 1;
 
-	double* X = malloc(n * sizeof(double));
+	long double* X = malloc(n * sizeof(long double));
 
 	for(int i = 0 ; i < n ; i++){
 		if(get_bit(emptyLines, i)){
@@ -43,8 +43,8 @@ void calculPertinence(Element** index, uint8_t* emptyLines, double* Y, int n){
 
 	for(int i = 0 ; i < n ; i++){
 		Element* current = index[i];
-		double newXi = 0;
-		double newYi = 0;
+		long double newXi = 0;
+		long double newYi = 0;
 
 		while(current != NULL){
 			newXi += precalcSurfer * current->value;
@@ -78,8 +78,8 @@ void calculPertinence(Element** index, uint8_t* emptyLines, double* Y, int n){
 
 		for(int i = 0 ; i < n ; i++){
 			Element* current = index[i];
-			double newXi = 0;
-			double newYi = 0;
+			long double newXi = 0;
+			long double newYi = 0;
 
 			while(current != NULL){
 				newXi += X[current->rowNumber] * current->value;
@@ -87,6 +87,11 @@ void calculPertinence(Element** index, uint8_t* emptyLines, double* Y, int n){
 				current = current->son;
 			}
 
+			/*
+			 * Sachant que Pour la matrice G, nabla[i]=precalcSurfer
+			 * alors norm*precalcSurfer+nabla[i](1-norm)
+			 * =precalcSurfer(norm+1-norm)=precalcSurfer
+			 */
 			newXi += impasseX * alphaDivN + precalcSurfer;
 			newYi += impasseY * alphaDivN + precalcSurfer;
 
@@ -97,12 +102,14 @@ void calculPertinence(Element** index, uint8_t* emptyLines, double* Y, int n){
 
 		normeSub = getNorme1Sub(X, Y, n);
 
+		if(nbIterations % 10 == 0)
+			printf("ite %d, normeX %6.9Lf, normeY %6.9Lf, normeSub %6.9Lf\n",nbIterations,getNorme1(X, n),getNorme1(Y, n),normeSub);
 		nbIterations++;
 
 	}while(normeSub > 1e-9);
 
-	printf("Résultat en %d itérations\n", nbIterations);
-	printVecteur(X, n);
+	printf("ite %d, normeX %6.9Lf, normeY %6.9Lf, normeSub %6.9Lf\n",nbIterations,getNorme1(X, n),getNorme1(Y, n),normeSub);
+	//printVecteur(X, n);
 	free(X);
 	free(Y);
 }
@@ -111,16 +118,16 @@ void calculPertinence(Element** index, uint8_t* emptyLines, double* Y, int n){
 void calculPertinenceOld(Element** index, uint8_t* emptyLines, int n){
 
 	printBoolVecteur(emptyLines, n);
-	double normeSub;
-	double alphaDivN = ALPHA/(double)n;
-	double precalcSurfer = (1-ALPHA)/(double)n;
+	long double normeSub;
+	long double alphaDivN = ALPHA/(long double)n;
+	long double precalcSurfer = (1-ALPHA)/(long double)n;
 	int nbIterations = 1;
 
-	double * oPI = malloc((n) * sizeof(double));
-	double * nPI = malloc((n) * sizeof(double));
+	long double * oPI = malloc((n) * sizeof(long double));
+	long double * nPI = malloc((n) * sizeof(long double));
 
 	// Saut lors d'une impasse
-	double impasse = 0;
+	long double impasse = 0;
 	for(int i = 0 ; i < n ; i++){
 		if(get_bit(emptyLines, i))
 			impasse += 1;
@@ -143,7 +150,7 @@ void calculPertinenceOld(Element** index, uint8_t* emptyLines, int n){
 	// Itération
 	do{
 
-		double* tmp = oPI;
+		long double* tmp = oPI;
 		oPI = nPI;
 		nPI = tmp;
 

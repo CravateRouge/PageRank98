@@ -7,7 +7,7 @@
 #include "read.h"
 
 
-int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines, double** pDelta){
+int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines, long double** pDelta){
 
 	/* Ouverture du fichier */
 	FILE * f = fopen(filename, "r");
@@ -33,18 +33,18 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 
 	//	int * columnLength = calloc(n, sizeof(*columnLength));
 
-	double* delta = (*pDelta) = calloc(n, sizeof(*delta));
+	long double* delta = (*pDelta) = calloc(n, sizeof(*delta));
 
 	bool flagImpasse = false;//Flag true si il y a au moins une ligne vide
 
-	double alphaDivN = ALPHA/(double)n;
+	long double alphaDivN = ALPHA/(long double)n;
 	/* Initialisation Nabla et delta (cout en N au lieu de M tests dans le min)*/
-	double precalcSurfer = (1-ALPHA)/n;
+	long double precalcSurfer = (1-ALPHA)/n;
 
 	/* Lecture des arcs */
 	for(int i = 0 ; i < n ; i++){
 		int rowNumber, degree;
-		double lastProb = 1.0;
+		long double otherProb = 0;
 
 		if(fscanf(f, "%d %d", &rowNumber, &degree) != 2){
 			return -1;
@@ -58,10 +58,10 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 
 		for(int numCouple = 0 ; numCouple < degree ; numCouple++){
 			int columnNumber;
-			double value;
+			long double value;
 			Element * e = malloc(sizeof(Element));
 
-			if(fscanf(f, "%d %lf", &columnNumber, &value) != 2){
+			if(fscanf(f, "%d %Lf", &columnNumber, &value) != 2){
 				return -1;
 			}
 			columnNumber--;
@@ -79,11 +79,11 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 			//TODO A cause de l'arrondissement, la dernière proba est
 			// souvent majorée alors qu'elle ne devrait pas l'être
 			// exemple ligne 281899 de Stanford
-			if(numCouple == (degree-1)){
-				value = lastProb;
-			} else {
-				lastProb -= value;
-			}
+//			if(numCouple == (degree-1)){
+//				value = 1-otherProb;
+//			} else {
+//				otherProb += value;
+//			}
 
 			value = value * ALPHA;
 			e->value = value;
@@ -105,7 +105,7 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 	fclose(f);
 
 	if(flagImpasse){
-		double precalc = alphaDivN + precalcSurfer;
+		long double precalc = alphaDivN + precalcSurfer;
 		for(int k = 0; k < n ; k++)
 			max(delta+k,precalc);
 	}

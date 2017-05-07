@@ -13,7 +13,7 @@
 #include "structures.h"
 #include "utils.h"
 
-int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines, double** pDelta);
+int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines, long double** pDelta);
 
 
 #endif /* READ_H_ */

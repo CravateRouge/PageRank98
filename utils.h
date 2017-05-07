@@ -16,13 +16,13 @@
 void freeIndex(Element *** index, int n);
 void printliste(Element** index, int n);
 
-void printVecteur(double * tab, int n);
-double getSommeVecteur(double * tab, int n);
+void printVecteur(long double * tab, int n);
+long double getSommeVecteur(long double * tab, int n);
 
 void set_bit(uint8_t *pElements,int element_index);
 bool get_bit(uint8_t *pElements, int element_index);
 
-void min(double* x, double y);
-void max(double* x, double y);
+void min(long double* x, long double y);
+void max(long double* x, long double y);
 
 #endif /* UTILS_H_ */

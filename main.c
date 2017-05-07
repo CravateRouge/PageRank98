@@ -16,7 +16,7 @@ int main(int argc, char* argv[]){
 
 	Element** index = NULL;
 	uint8_t* emptyLines = NULL;
-	double* delta = NULL;
+	long double* delta = NULL;
 
 	if(readFile(argv[1], &index, &n, &emptyLines, &delta) == -1){
 		fprintf(stderr, "Fichier non conforme\n");

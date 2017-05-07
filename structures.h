@@ -11,7 +11,7 @@
 #include <stdint.h>
 
 typedef struct Element{
-	double value;
+	long double value;
 	int rowNumber;
 	struct Element * son;
 } Element;

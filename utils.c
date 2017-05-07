@@ -34,13 +34,13 @@ void printliste(Element** index, int n){
 	}
 }
 
-void printVecteur(double * tab, int n){
+void printVecteur(long double * tab, int n){
 	FILE * f = fopen("./result.txt", "w");
 	if(f == NULL){
 		fprintf(stderr, "Unable to open result.txt");
 		return;
 	}
-	double somme = 0.0;
+	long double somme = 0.0;
 	for(int i = 0 ; i < n ; i++){
 		fprintf(f, "%d = %lf\n", i, tab[i]);
 		somme += tab[i];
@@ -66,8 +66,8 @@ void printBoolVecteur(uint8_t * boolVector, int n){
 	fclose(f);
 }
 
-double getSommeVecteur(double * tab, int n){
-	double somme = 0.0;
+long double getSommeVecteur(long double * tab, int n){
+	long double somme = 0.0;
 	for(int i = 0 ; i < n ; i++){
 		somme += tab[i];
 	}
@@ -99,12 +99,12 @@ bool get_bit(uint8_t *pElements, int element_index){
 	return *element&(1<<bit_index);
 }
 
-void min(double* x, double y){
+void min(long double* x, long double y){
 	if(*x > y)
 		*x = y;
 }
 
-void max(double* x, double y){
+void max(long double* x, long double y){
 	if(*x < y)
 		*x = y;
 }
