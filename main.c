@@ -6,9 +6,9 @@
 #include "pertinence.h"
 
 int main(int argc, char* argv[]){
-	if(argc-1 != 1)
+	if(argc-1 != 2)
 	{
-		fprintf(stderr, "USAGE : %s nomfichier\n", argv[0]);
+		fprintf(stderr, "USAGE : %s nomfichier précision\n", argv[0]);
 		return 1;
 	}
 
@@ -25,11 +25,12 @@ int main(int argc, char* argv[]){
 		return 1;
 	}
 
-	//printliste(index, n);
 
 	printf("Début de l'algorithme\n");
-//	calculPertinenceOld(index, emptyLines, n);
-	calculPertinence(index, emptyLines, delta, n);
+
+	double precision = 0;
+	sscanf(argv[2], "%lf", &precision);
+	calculPertinence(index, emptyLines, delta, n, precision);
 
 	freeIndex(&index, n);
 	free(emptyLines);

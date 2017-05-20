@@ -24,7 +24,7 @@ long double getNorme1Sub(long double * nPI, long double * oPI, int n){
 	return norme;
 }
 
-void calculPertinence(Element** index, uint8_t* emptyLines, long double* Y, int n){
+void calculPertinence(Element** index, uint8_t* emptyLines, long double* Y, int n, double precision){
 
 	long double normeSub;
 	long double alphaDivN = ALPHA/n;
@@ -102,11 +102,11 @@ void calculPertinence(Element** index, uint8_t* emptyLines, long double* Y, int 
 
 		normeSub = getNorme1Sub(X, Y, n);
 
-		if(nbIterations % 10 == 0)
-			printf("ite %d, normeX %6.9Lf, normeY %6.9Lf, normeSub %6.9Lf\n",nbIterations,getNorme1(X, n),getNorme1(Y, n),normeSub);
+		//if(nbIterations % 10 == 0)
+		//	printf("ite %d, normeX %6.9Lf, normeY %6.9Lf, normeSub %6.9Lf\n",nbIterations,getNorme1(X, n),getNorme1(Y, n),normeSub);
 		nbIterations++;
 
-	}while(normeSub > 1e-9);
+	}while(normeSub > precision);
 
 	printf("ite %d, normeX %6.9Lf, normeY %6.9Lf, normeSub %6.9Lf\n",nbIterations,getNorme1(X, n),getNorme1(Y, n),normeSub);
 	//printVecteur(X, n);
