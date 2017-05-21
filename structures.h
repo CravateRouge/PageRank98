@@ -1,10 +1,3 @@
-/*
- * structures.h
- *
- *  Created on: 31 mars 2017
- *      Author: robin
- */
-
 #ifndef STRUCTURES_H_
 #define STRUCTURES_H_
 

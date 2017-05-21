@@ -1,10 +1,3 @@
-/*
- * read.h
- *
- *  Created on: 31 mars 2017
- *      Author: robin
- */
-
 #ifndef READ_H_
 #define READ_H_
 

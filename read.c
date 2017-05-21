@@ -31,14 +31,14 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 	/*Pour n informations on alloue (n+7)/8 octets*/
 	uint8_t* emptyLines = (*pEmptyLines) = calloc((n+7)/8, sizeof(*emptyLines));
 
-	//	int * columnLength = calloc(n, sizeof(*columnLength));
-
 	long double* delta = (*pDelta) = calloc(n, sizeof(*delta));
 
 	bool flagImpasse = false;//Flag true si il y a au moins une ligne vide
 
 	long double alphaDivN = ALPHA/(long double)n;
+
 	/* Initialisation Nabla et delta (cout en N au lieu de M tests dans le min)*/
+
 	long double precalcSurfer = (1-ALPHA)/n;
 
 	/* Lecture des arcs */
@@ -72,26 +72,8 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 			e->son = index[columnNumber];
 			index[columnNumber] = e;
 
-			//			columnLength[columnNumber]++;
-
-
-			//Pour assurer la cohérence, on calcule la dernière proba
-			//TODO A cause de l'arrondissement, la dernière proba est
-			// souvent majorée alors qu'elle ne devrait pas l'être
-			// exemple ligne 281899 de Stanford
-//			if(numCouple == (degree-1)){
-//				value = 1-otherProb;
-//			} else {
-//				otherProb += value;
-//			}
-
 			value = value * ALPHA;
 			e->value = value;
-
-			//			if(!is_impasse){
-			//				// nabla[0] c'est le minimum de la colonne 0 de G
-			//				min(nabla+columnNumber, value + precalcSurfer);
-			//			}
 
 			max(delta+columnNumber, value + precalcSurfer);
 
@@ -110,14 +92,6 @@ int readFile(char * filename, Element*** pIndex, int* pN, uint8_t** pEmptyLines,
 			max(delta+k,precalc);
 	}
 
-	//	/* Gestion des potentiels 0 dans les colonnes, qui ne seraient pas compris dans des lignes vides */
-	//	for(int k = 0 ; k < n ; k++)
-	//		if(columnLength[k] != n)
-	//			nabla[k] = precalcSurfer;
-
-
-
-	//	free(columnLength);
 	return 0;
 }
 

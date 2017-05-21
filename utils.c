@@ -1,9 +1,3 @@
-/*
- * utils.c
- *
- *  Created on: 31 mars 2017
- *      Author: robin
- */
 #include "utils.h"
 
 void freeIndex(Element *** index, int n){

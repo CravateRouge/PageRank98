@@ -1,10 +1,3 @@
-/*
- * pertinence.h
- *
- *  Created on: 6 avr. 2017
- *      Author: robin
- */
-
 #ifndef PERTINENCE_H_
 #define PERTINENCE_H_
 #include <stdlib.h>

@@ -1,10 +1,3 @@
-/*
- * utils.h
- *
- *  Created on: 31 mars 2017
- *      Author: robin
- */
-
 #ifndef UTILS_H_
 #define UTILS_H_
 
